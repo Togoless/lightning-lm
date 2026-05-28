@@ -67,7 +67,6 @@ void PangolinWindowImpl::Reset(const std::vector<Keyframe::Ptr> &keyframes) {
 }
 
 bool PangolinWindowImpl::DeInit() {
-    ReleaseBuffer();
     return true;
 }
 
@@ -429,7 +428,9 @@ void PangolinWindowImpl::Render() {
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 
-    // unset the current context from the main thread
+    ReleaseBuffer();
+
+    // unset the current context from the render thread
     pangolin::GetBoundWindow()->RemoveCurrent();
     pangolin::DestroyWindow(GetWindowName());
 }
@@ -446,6 +447,30 @@ void PangolinWindowImpl::AllocateBuffer() {
     gltext_label_state_ = font.Text("ba: [0.0000, 0.0000, 0.0000]");
 }
 
-void PangolinWindowImpl::ReleaseBuffer() {}
+void PangolinWindowImpl::ReleaseBuffer() {
+    cloud_map_ui_.clear();
+    cloud_dyn_ui_.clear();
+    current_scan_ui_.reset();
+    scans_.clear();
+
+    if (traj_scans_) {
+        traj_scans_->Clear();
+    }
+    if (traj_newest_state_) {
+        traj_newest_state_->Clear();
+    }
+    traj_scans_.reset();
+    traj_newest_state_.reset();
+
+    plotter_vel_.reset();
+    plotter_vel_baselink_.reset();
+    plotter_bias_acc_.reset();
+    plotter_confidence_.reset();
+    plotter_err_.reset();
+    plotter_err_eval_.reset();
+
+    gltext_label_global_ = pangolin::GlText();
+    gltext_label_state_ = pangolin::GlText();
+}
 
 }  // namespace lightning::ui

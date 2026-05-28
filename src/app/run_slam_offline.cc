@@ -4,6 +4,7 @@
 
 #include <gflags/gflags.h>
 #include <glog/logging.h>
+#include <iostream>
 
 #include "core/system/slam.h"
 #include "ui/pangolin_window.h"
@@ -74,6 +75,9 @@ int main(int argc, char** argv) {
 
     slam.SaveMap("");
     Timer::PrintAll();
+
+    LOG(INFO) << "press Enter to exit";
+    std::cin.get();
 
     LOG(INFO) << "done";
 

@@ -157,7 +157,7 @@ void SlamSystem::SaveMap(const std::string& path) {
     LOG(INFO) << "slam map saving to " << save_path;
 
     if (!std::filesystem::exists(save_path)) {
-        std::filesystem::create_directories(save_path);〔方案選單〕 
+        std::filesystem::create_directories(save_path);
     } else {
         std::filesystem::remove_all(save_path);
         std::filesystem::create_directories(save_path);
