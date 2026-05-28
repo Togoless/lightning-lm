@@ -35,6 +35,9 @@ bool SlamSystem::Init(const std::string& yaml_path) {
     options_.with_gridmap_ = yaml["system"]["with_g2p5"].as<bool>();
     options_.step_on_kf_ = yaml["system"]["step_on_kf"].as<bool>();
 
+    // 保存地图路径
+    options_.map_path_ = yaml["system"]["map_path"].as<std::string>();
+
     if (options_.with_loop_closing_) {
         LOG(INFO) << "slam with loop closing";
         LoopClosing::Options options;
@@ -146,13 +149,15 @@ void SlamSystem::SaveMap(const SaveMapService::Request::SharedPtr request,
 void SlamSystem::SaveMap(const std::string& path) {
     std::string save_path = path;
     if (save_path.empty()) {
-        save_path = "./data/" + map_name_ + "/";
+        // 如果没有指定路径，则使用默认路径，应该是从config读取路径
+        // save_path = "./data/" + map_name_ + "/";
+        save_path = options_.map_path_;
     }
 
     LOG(INFO) << "slam map saving to " << save_path;
 
     if (!std::filesystem::exists(save_path)) {
-        std::filesystem::create_directories(save_path);
+        std::filesystem::create_directories(save_path);〔方案選單〕 
     } else {
         std::filesystem::remove_all(save_path);
         std::filesystem::create_directories(save_path);

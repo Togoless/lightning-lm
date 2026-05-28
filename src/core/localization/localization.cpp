@@ -44,6 +44,7 @@ bool Localization::Init(const std::string& yaml_path, const std::string& global_
     lidar_loc_options.map_option_.map_path_ = global_map_path;
     lidar_loc_ = std::make_shared<LidarLoc>(lidar_loc_options);
 
+   
     if (options_.with_ui_) {
         ui_ = std::make_shared<ui::PangolinWindow>();
         ui_->SetCurrentScanSize(1);
